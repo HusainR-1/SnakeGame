@@ -50,11 +50,9 @@ public class GamePanel extends JPanel implements ActionListener{
         super.paintComponent(g);
         draw(g);
     }
-    //Draw Method
-    public void draw(Graphics g){
-        if(running){
-
-            //Drawing Grid Lines 
+    //Grid Lines Method
+    public void gridLines(Graphics g){
+        //Drawing Grid Lines 
             //X-Axis
             for (int i=0;i<SCREEN_HEIGHT/UNIT_SIZE;i++){
                 g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);
@@ -63,6 +61,12 @@ public class GamePanel extends JPanel implements ActionListener{
             for (int i=0;i<SCREEN_WIDTH/UNIT_SIZE;i++){
                 g.drawLine(0,i*UNIT_SIZE,SCREEN_WIDTH,i*UNIT_SIZE );
             }
+    }
+    //Draw Method
+    public void draw(Graphics g){
+        if(running){
+            //Shows Grid Lines
+            gridLines(g);
             //Apple figures on the Screen
             g.setColor(Color.red);
             g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
@@ -77,12 +81,21 @@ public class GamePanel extends JPanel implements ActionListener{
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }
-        }   
+            //Shows the score while the game is running
+            showScore(g);  
+        } 
         else{
             gameOver(g);
         }     
     }
-        //New Apple Method
+    //Show Score Method
+    public void showScore(Graphics g){
+        g.setColor(Color.red);
+            g.setFont(new Font("Ink Free",Font.BOLD,40));
+            FontMetrics metrics = getFontMetrics(g.getFont());
+            g.drawString("Score: "+applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
+    }
+    //New Apple Method
     public void newApple(){
         //Creating random co-ordinates for the position of the Apple
         appleX = random.nextInt((int)(SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
@@ -150,6 +163,8 @@ public class GamePanel extends JPanel implements ActionListener{
     }
     //Game Over Method
     public void gameOver(Graphics g){
+        //Showing the score after game
+        showScore(g);
         //Game-Over text
         g.setColor(Color.red);
         g.setFont(new Font("Ink Free",Font.BOLD,75));
