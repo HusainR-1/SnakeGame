@@ -110,7 +110,33 @@ public class GamePanel extends JPanel implements ActionListener{
     }
     //Check Collisions Method
     public void checkCollisions(){
-
+        for(int i = bodyParts;i>0;i--){
+            //Checks if the head colided with the body
+            if((x[0] == x[i]) && (y[0] == y[i]) ){
+                //Works as a gameOver setup
+                running = false;
+            }
+        }
+        //checks if head touches left border
+        if(x[0] < 0){
+            running = false;
+        }
+        //checks if head touches right border
+        if(x[0] > SCREEN_WIDTH){
+            running = false;
+        }
+        //checks if head touches top border
+        if(y[0] < 0){
+            running = false;
+        }
+        //checks if head touches bottom border
+        if(y[0] > SCREEN_HEIGHT){
+            running = false;
+        }  
+        //Stop the Timer , if game it's not running
+        if(!running){
+            timer.stop();
+        }
     }
     //Game Over Method
     public void gameOver(Graphics g){
@@ -119,8 +145,13 @@ public class GamePanel extends JPanel implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+        //Checks if the game is running
+        if(running){
+            move();
+            checkApple();
+            checkCollisions();
+        }  
+        repaint();
     }
     //'My Key Adapter' Interclass 
     public class MyKeyAdapter extends KeyAdapter{
