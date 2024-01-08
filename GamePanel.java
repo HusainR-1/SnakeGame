@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -8,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Random;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -20,12 +22,14 @@ public class GamePanel extends JPanel implements ActionListener{
     static final int DELAY = 75; 
     final int x[] = new int[GAME_UNITS];
     final int y[] = new int[GAME_UNITS];
-    int bodyParts = 6;
+    int bodyParts;
     int applesEaten;
     int appleX;
     int appleY;
-    char direction = 'R';
+    char direction;
+    JButton startButton;
     boolean running = false;
+    boolean played = false;
     Timer timer;
     Random random;
 
@@ -36,12 +40,42 @@ public class GamePanel extends JPanel implements ActionListener{
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
-        startGame();
+        createStartButton();
+    }
+    //Create "START" button
+    private void createStartButton(){
+        startButton = new JButton();
+        startButton.setText("START GAME");
+        startButton.setFont(new Font(Font.SANS_SERIF,Font.ITALIC,25));
+        startButton.setBorderPainted(false);
+        startButton.setForeground(Color.red);
+        startButton.setBackground(Color.black);
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                startGame();
+            }
+        });
+        //Using Flow Layout for this pannel
+        setLayout(new FlowLayout(FlowLayout.CENTER,0,SCREEN_HEIGHT/2));
+        //Adding the Start button to this pannel
+        this.add(startButton); 
     }
     //Start Game Method
     public void startGame(){
+        bodyParts = 6;
+        applesEaten = 0;
+        direction = 'R';
+
+        // Initialize snake position
+        for (int i = 0; i < bodyParts; i++) {
+            x[i] = 0;
+            y[i] = 0;
+        }
+        //Start of the game
         newApple();
         running = true;
+        startButton.setVisible(false); // Hide the "START" buttin
         timer = new Timer(DELAY, this);
         timer.start();
     }
@@ -64,6 +98,7 @@ public class GamePanel extends JPanel implements ActionListener{
     }
     //Draw Method
     public void draw(Graphics g){
+        if (!running && !played){displayText(g,"Welcome!");}
         if(running){
             //Shows Grid Lines
             gridLines(g);
@@ -78,13 +113,15 @@ public class GamePanel extends JPanel implements ActionListener{
                 }
                 else{
                     g.setColor(new Color(45,180,0));
+                    //For Random Colors (Rainbow Effect)
+                    //g.setColor(new Color(random.nextInt(255),random.nextInt(255),random.nextInt(255)));
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }
             //Shows the score while the game is running
             showScore(g);  
         } 
-        else{
+        else if(played){
             gameOver(g);
         }     
     }
@@ -138,38 +175,49 @@ public class GamePanel extends JPanel implements ActionListener{
             if((x[0] == x[i]) && (y[0] == y[i]) ){
                 //Works as a gameOver setup
                 running = false;
+                played = true;
             }
         }
         //checks if head touches left border
         if(x[0] < 0){
             running = false;
+            played = true;
         }
         //checks if head touches right border
         if(x[0] > SCREEN_WIDTH){
             running = false;
+             played = true;
         }
         //checks if head touches top border
         if(y[0] < 0){
             running = false;
+             played = true;
         }
         //checks if head touches bottom border
         if(y[0] > SCREEN_HEIGHT){
             running = false;
+            played = true;
         }  
         //Stop the Timer , if game it's not running
         if(!running){
             timer.stop();
         }
     }
+    //Display Text Method
+    public void displayText(Graphics g,String textToDisplay){
+        g.setColor(Color.red);
+        g.setFont(new Font("Ink Free",Font.BOLD,75));
+        FontMetrics metrics = getFontMetrics(g.getFont());
+        g.drawString(textToDisplay, (SCREEN_WIDTH - metrics.stringWidth(textToDisplay))/2, SCREEN_HEIGHT/3);
+    }
     //Game Over Method
     public void gameOver(Graphics g){
         //Showing the score after game
         showScore(g);
         //Game-Over text
-        g.setColor(Color.red);
-        g.setFont(new Font("Ink Free",Font.BOLD,75));
-        FontMetrics metrics = getFontMetrics(g.getFont());
-        g.drawString("Game Over", (SCREEN_WIDTH - metrics.stringWidth("Game Over"))/2, SCREEN_HEIGHT/2);
+        displayText(g,"Game Over!");
+        startButton.setText("Re-START");
+        startButton.setVisible(true);
     }   
 
     @Override
