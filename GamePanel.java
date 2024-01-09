@@ -11,15 +11,17 @@ import java.awt.event.KeyEvent;
 import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements ActionListener{
-    static final int SCREEN_WIDTH = 600;
-    static final int SCREEN_HEIGHT = 600;
-    static final int UNIT_SIZE = 25;
-    static final int GAME_UNITS = (SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE;
-    static final int DELAY = 75; 
+    static final int SCREEN_WIDTH = 600; // Width of the panel
+    static final int SCREEN_HEIGHT = 600; // Height of the panel    
+    static final int UNIT_SIZE = 25; // Each unit size
+    static final int GAME_UNITS = (SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE; // Total no. of units in the game
+    static final int DELAY = 75; // Delay in the movement of the snake
     final int x[] = new int[GAME_UNITS];
     final int y[] = new int[GAME_UNITS];
     int bodyParts;
@@ -29,9 +31,12 @@ public class GamePanel extends JPanel implements ActionListener{
     char direction;
     JButton startButton;
     JCheckBox checkBox;
+    JTextField nameField;
+    JButton enterNameButton;
     boolean running = false;
     boolean played = false;
     boolean assist = false;
+    String username;
     Timer timer;
     Random random;
 
@@ -42,9 +47,37 @@ public class GamePanel extends JPanel implements ActionListener{
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
-        this.setLayout(new FlowLayout(FlowLayout.CENTER,SCREEN_WIDTH/2,250));
-        createStartButton();
-        assistiveMode();
+        this.setLayout(new FlowLayout(FlowLayout.CENTER,SCREEN_WIDTH/10,275));
+        name();
+    }
+    //Creating Name Method
+    private void name(){
+        nameField = new JTextField(15);
+        
+        JLabel nameLabel = new JLabel("Enter your Name: ");
+        nameLabel.setForeground(Color.red);
+        
+        enterNameButton = new JButton("Next");
+        enterNameButton.setForeground(Color.red);
+        enterNameButton.setBackground(Color.black);
+        enterNameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                username = nameField.getText();
+                if (!username.isEmpty()){
+                    nameField.setVisible(played);
+                    enterNameButton.setVisible(played);
+                    nameLabel.setVisible(played);
+                    repaint();
+                    createStartButton();
+                    assistiveMode();
+                }
+            }
+        });
+        
+        this.add(nameLabel);
+        this.add(nameField);
+        this.add(enterNameButton);
     }
     //Checkbox for Assistive Mode Method
     private void assistiveMode(){
@@ -121,7 +154,7 @@ public class GamePanel extends JPanel implements ActionListener{
     }
     //Draw Method
     public void draw(Graphics g){
-        if (!running && !played){displayText(g,"Welcome!");}
+        if (!running && !played){displayText(g,"Welcome ");}
         if(running){
             checkBox.setVisible(!running);
             if(assist){ gridLines(g);}//Shows Grid Lines
@@ -231,7 +264,14 @@ public class GamePanel extends JPanel implements ActionListener{
         g.setColor(Color.red);
         g.setFont(new Font("Ink Free",Font.BOLD,75));
         FontMetrics metrics = getFontMetrics(g.getFont());
-        g.drawString(textToDisplay, (SCREEN_WIDTH - metrics.stringWidth(textToDisplay))/2, SCREEN_HEIGHT/3);
+        if(textToDisplay.startsWith("Welcome ") && username !=null){
+            // If the text is "Welcome! " + username, display it differently
+        g.drawString("Welcome " + username + "!", (SCREEN_WIDTH - metrics.stringWidth("Welcome " + username + "!")) / 2, SCREEN_HEIGHT / 3);
+        }
+        else {
+            // Otherwise, display the text as usual
+            g.drawString(textToDisplay, (SCREEN_WIDTH - metrics.stringWidth(textToDisplay)) / 2, SCREEN_HEIGHT / 3);
+        }
     }
     //Game Over Method
     public void gameOver(Graphics g){
