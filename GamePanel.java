@@ -10,11 +10,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements ActionListener{
-
     static final int SCREEN_WIDTH = 600;
     static final int SCREEN_HEIGHT = 600;
     static final int UNIT_SIZE = 25;
@@ -28,8 +28,10 @@ public class GamePanel extends JPanel implements ActionListener{
     int objectY;
     char direction;
     JButton startButton;
+    JCheckBox checkBox;
     boolean running = false;
     boolean played = false;
+    boolean assist = false;
     Timer timer;
     Random random;
 
@@ -40,7 +42,30 @@ public class GamePanel extends JPanel implements ActionListener{
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
+        this.setLayout(new FlowLayout(FlowLayout.CENTER,SCREEN_WIDTH/2,250));
         createStartButton();
+        assistiveMode();
+    }
+    //Checkbox for Assistive Mode Method
+    private void assistiveMode(){
+        checkBox = new JCheckBox();
+        checkBox.setText("Assistive Mode");
+        checkBox.setFocusable(false);
+        checkBox.setFont(new Font("Consolas",Font.PLAIN,20));
+        checkBox.setForeground(Color.red);
+        checkBox.setBackground(Color.black);
+        checkBox.setVisible(!running);
+        checkBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if(e.getSource()==checkBox){
+                    if(checkBox.isSelected()){assist = true;}
+                    else{assist = false;}
+                }
+            }
+        });
+        this.add(checkBox);
+        
     }
     //Create "START" button
     private void createStartButton(){
@@ -56,8 +81,6 @@ public class GamePanel extends JPanel implements ActionListener{
                 startGame();
             }
         });
-        //Using Flow Layout for this pannel
-        setLayout(new FlowLayout(FlowLayout.CENTER,0,SCREEN_HEIGHT/2));
         //Adding the Start button to this pannel
         this.add(startButton); 
     }
@@ -75,7 +98,7 @@ public class GamePanel extends JPanel implements ActionListener{
         //Start of the game
         newObject();
         running = true;
-        startButton.setVisible(false); // Hide the "START" buttin
+        startButton.setVisible(!running); // Hide the "START" Button
         timer = new Timer(DELAY, this);
         timer.start();
     }
@@ -87,21 +110,21 @@ public class GamePanel extends JPanel implements ActionListener{
     //Grid Lines Method
     public void gridLines(Graphics g){
         //Drawing Grid Lines 
-            //X-Axis
-            for (int i=0;i<SCREEN_HEIGHT/UNIT_SIZE;i++){
-                g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);
-            }
-            //Y-Axis
-            for (int i=0;i<SCREEN_WIDTH/UNIT_SIZE;i++){
-                g.drawLine(0,i*UNIT_SIZE,SCREEN_WIDTH,i*UNIT_SIZE );
-            }
+        //X-Axis
+        for (int i=0;i<SCREEN_HEIGHT/UNIT_SIZE;i++){
+            g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);
+        }
+        //Y-Axis
+        for (int i=0;i<SCREEN_WIDTH/UNIT_SIZE;i++){
+            g.drawLine(0,i*UNIT_SIZE,SCREEN_WIDTH,i*UNIT_SIZE );
+        }
     }
     //Draw Method
     public void draw(Graphics g){
         if (!running && !played){displayText(g,"Welcome!");}
         if(running){
-            //Shows Grid Lines
-            gridLines(g);
+            checkBox.setVisible(!running);
+            if(assist){ gridLines(g);}//Shows Grid Lines
             //Object figures on the Screen
             g.setColor(Color.red);
             g.fillOval(objectX, objectY, UNIT_SIZE, UNIT_SIZE);
@@ -144,7 +167,7 @@ public class GamePanel extends JPanel implements ActionListener{
             x[i] = x[i-1];
             y[i] = y[i-1];
         }
-
+        //Controls of the Game
         switch(direction){
             case 'U': //UP
                 y[0] = y[0]-UNIT_SIZE;
@@ -217,7 +240,8 @@ public class GamePanel extends JPanel implements ActionListener{
         //Game-Over text
         displayText(g,"Game Over!");
         startButton.setText("Re-START");
-        startButton.setVisible(true);
+        startButton.setVisible(!running);
+        checkBox.setVisible(!running);
     }   
 
     @Override
