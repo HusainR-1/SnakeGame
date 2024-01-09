@@ -23,9 +23,9 @@ public class GamePanel extends JPanel implements ActionListener{
     final int x[] = new int[GAME_UNITS];
     final int y[] = new int[GAME_UNITS];
     int bodyParts;
-    int applesEaten;
-    int appleX;
-    int appleY;
+    int objectsEaten;
+    int objectX;
+    int objectY;
     char direction;
     JButton startButton;
     boolean running = false;
@@ -64,7 +64,7 @@ public class GamePanel extends JPanel implements ActionListener{
     //Start Game Method
     public void startGame(){
         bodyParts = 6;
-        applesEaten = 0;
+        objectsEaten = 0;
         direction = 'R';
 
         // Initialize snake position
@@ -73,7 +73,7 @@ public class GamePanel extends JPanel implements ActionListener{
             y[i] = 0;
         }
         //Start of the game
-        newApple();
+        newObject();
         running = true;
         startButton.setVisible(false); // Hide the "START" buttin
         timer = new Timer(DELAY, this);
@@ -102,9 +102,9 @@ public class GamePanel extends JPanel implements ActionListener{
         if(running){
             //Shows Grid Lines
             gridLines(g);
-            //Apple figures on the Screen
+            //Object figures on the Screen
             g.setColor(Color.red);
-            g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
+            g.fillOval(objectX, objectY, UNIT_SIZE, UNIT_SIZE);
             
             for(int i = 0; i < bodyParts; i++){
                 if(i==0){
@@ -130,13 +130,13 @@ public class GamePanel extends JPanel implements ActionListener{
         g.setColor(Color.red);
             g.setFont(new Font("Ink Free",Font.BOLD,40));
             FontMetrics metrics = getFontMetrics(g.getFont());
-            g.drawString("Score: "+applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+applesEaten))/2, g.getFont().getSize());
+            g.drawString("Score: "+objectsEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+objectsEaten))/2, g.getFont().getSize());
     }
-    //New Apple Method
-    public void newApple(){
-        //Creating random co-ordinates for the position of the Apple
-        appleX = random.nextInt((int)(SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
-        appleY = random.nextInt((int)(SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
+    //New Object Method
+    public void newObject(){
+        //Creating random co-ordinates for the position of the Object
+        objectX = random.nextInt((int)(SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
+        objectY = random.nextInt((int)(SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
     }
     //Move Method   
     public void move(){
@@ -160,12 +160,12 @@ public class GamePanel extends JPanel implements ActionListener{
                 break;
         }
     }
-    //Check Apple Method
-    public void checkApple(){
-        if((x[0]==appleX) && (y[0]==appleY)){
+    //Check Object Method
+    public void checkObject(){
+        if((x[0]==objectX) && (y[0]==objectY)){
             bodyParts++;
-            applesEaten++;
-            newApple();
+            objectsEaten++;
+            newObject();
         }
     }
     //Check Collisions Method
@@ -225,7 +225,7 @@ public class GamePanel extends JPanel implements ActionListener{
         //Checks if the game is running
         if(running){
             move();
-            checkApple();
+            checkObject();
             checkCollisions();
         }  
         repaint();
