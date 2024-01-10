@@ -25,7 +25,7 @@ public class GamePanel extends JPanel implements ActionListener{
     public static final int SCREEN_HEIGHT = 600; // Height of the panel    
     static final int UNIT_SIZE = 25; // Each unit size
     static final int GAME_UNITS = (SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE; // Total no. of units in the game
-    int DELAY = 75; // Delay in the movement of the snake
+    int DELAY = 75; // Delay in the movement of the snake (Default Medium Mode)
     final int x[] = new int[GAME_UNITS];
     final int y[] = new int[GAME_UNITS];
     int bodyParts;
@@ -39,14 +39,14 @@ public class GamePanel extends JPanel implements ActionListener{
     JLabel textLabel;
     JPanel startContainer;
     JPanel detailsContainer;
-    JPanel radioPanel;
+    JPanel radioContainer;
     JButton enterNameButton;
     JRadioButton easyButton;
     JRadioButton mediumButton;
     JRadioButton hardButton;
-    boolean running = false;
-    boolean played = false;
-    boolean assist = false;
+    boolean running;
+    boolean played;
+    boolean assist;
     String username;
     Timer timer;
     Random random;
@@ -54,22 +54,20 @@ public class GamePanel extends JPanel implements ActionListener{
     //Constructor
     GamePanel(){
         random = new Random();
-        //this.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
         this.setPreferredSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());    
-        //this.setLayout(new GridLayout(10,2));
         this.setLayout(new FlowLayout(FlowLayout.CENTER,100,100));
         name();
     }
     //Creating Name Method
     private void name(){
-        displayText("Welcome ");
-        nameField = new JTextField(15);
+        displayText("Welcome "); //Displays Welcome
+        nameField = new JTextField(15); //Takes in the UserName
         
-        JLabel nameLabel = new JLabel("Enter your Name: ");
-        nameLabel.setForeground(Color.red);
+        JLabel nameLabel = new JLabel("Enter your Name: "); //Prompt Label 
+        nameLabel.setForeground(Color.red); 
         nameLabel.setFont(new Font("Consolas",Font.BOLD,20));
         enterNameButton = new JButton("Next");
         enterNameButton.setForeground(Color.red);
@@ -81,13 +79,9 @@ public class GamePanel extends JPanel implements ActionListener{
             public void actionPerformed(ActionEvent e){
                 username = nameField.getText();
                 if (!username.isEmpty()){
-                    textLabel.setVisible(false);
                     detailsContainer.setVisible(false);
-                    repaint();
-                    displayText("Welcome ");
+                    textLabel.setText("Welcome "+username+"!"); // Renames with the UserName
                     createStartButton();
-                    assistiveMode();
-                    difficultyMode();
                 }
             }
         });
@@ -99,33 +93,11 @@ public class GamePanel extends JPanel implements ActionListener{
         detailsContainer.add(enterNameButton);
         this.add(detailsContainer);
     }
-    //Checkbox for Assistive Mode Method
-    private void assistiveMode(){
-        checkBox = new JCheckBox();
-        checkBox.setText("Assistive Mode");
-        checkBox.setFocusable(false);
-        checkBox.setFont(new Font("Consolas",Font.PLAIN,20));
-        checkBox.setForeground(Color.red);
-        checkBox.setBackground(Color.black);
-        checkBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e){
-                if(e.getSource()==checkBox){
-                    if(checkBox.isSelected()){assist = true;}
-                    else{assist = false;}
-                }
-            }
-        });
-        startContainer = new JPanel(new GridLayout(1,2));
-        startContainer.add(startButton);
-        startContainer.add(checkBox);
-        this.add(startContainer);        
-    }
     //Create "START" button
     private void createStartButton(){
         startButton = new JButton();
         startButton.setText("START GAME");
-        startButton.setFont(new Font(Font.SANS_SERIF,Font.ITALIC,25));
+        startButton.setFont(new Font("Consolas",Font.BOLD,25));
         startButton.setBorderPainted(false);
         startButton.setForeground(Color.red);
         startButton.setBackground(Color.black);
@@ -135,19 +107,43 @@ public class GamePanel extends JPanel implements ActionListener{
                 startGame();
             }
         });
+        assistiveMode();
+        difficultyMode();
+    }
+    //Checkbox for Assistive Mode Method
+    private void assistiveMode(){
+        checkBox = new JCheckBox();
+        checkBox.setText("Assistive Mode");
+        checkBox.setFocusable(false);
+        checkBox.setFont(new Font("Consolas",Font.BOLD,20));
+        checkBox.setForeground(Color.red);
+        checkBox.setBackground(Color.black);
+        checkBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if(checkBox.isSelected()){assist = true;}
+                else{assist = false;}
+            }});
+        startContainer = new JPanel(new GridLayout(2,1));
+        startContainer.add(startButton);
+        startContainer.add(checkBox);
+        this.add(startContainer);        
     }
     // Difficulty Mode Method
     private void difficultyMode() {
         easyButton = new JRadioButton("Easy");
         easyButton.setForeground(Color.red);
         easyButton.setBackground(Color.black);
+        easyButton.setFont(new Font("Consolas",Font.BOLD,20));
         mediumButton = new JRadioButton("Medium");
         mediumButton.setForeground(Color.red);
         mediumButton.setBackground(Color.black);
+        mediumButton.setFont(new Font("Consolas",Font.BOLD,20));
         mediumButton.setSelected(true);
         hardButton = new JRadioButton("Hard");
         hardButton.setForeground(Color.red);
         hardButton.setBackground(Color.black);
+        hardButton.setFont(new Font("Consolas",Font.BOLD,20));
 
         ButtonGroup group = new ButtonGroup();
         group.add(easyButton);
@@ -156,32 +152,21 @@ public class GamePanel extends JPanel implements ActionListener{
 
         easyButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                DELAY = 100;
-                System.out.println("You selected Easy difficulty!");
-            }
-        });
+            public void actionPerformed(ActionEvent e) {DELAY = 100;}});
         
         mediumButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                DELAY = 75;
-                System.out.println("You selected Medium difficulty!");
-            }
-        });
+            public void actionPerformed(ActionEvent e) {DELAY = 75;}});
 
         hardButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                DELAY = 50;
-                System.out.println("You selected Hard difficulty!");
-            }
-        });
-        radioPanel = new JPanel(new GridLayout(1,3));
-        radioPanel.add(easyButton);
-        radioPanel.add(mediumButton);
-        radioPanel.add(hardButton);
-        this.add(radioPanel);
+            public void actionPerformed(ActionEvent e) {DELAY = 50;}});
+
+        radioContainer = new JPanel(new GridLayout(3,1));
+        radioContainer.add(easyButton);
+        radioContainer.add(mediumButton);
+        radioContainer.add(hardButton);
+        this.add(radioContainer);
     }
     //Start Game Method
     public void startGame(){
@@ -209,12 +194,10 @@ public class GamePanel extends JPanel implements ActionListener{
     //Grid Lines Method
     public void gridLines(Graphics g){
         //Drawing Grid Lines 
-        //X-Axis
         for (int i=0;i<SCREEN_HEIGHT/UNIT_SIZE;i++){
+            //X-Axis
             g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);
-        }
-        //Y-Axis
-        for (int i=0;i<SCREEN_WIDTH/UNIT_SIZE;i++){
+            //Y-Axis
             g.drawLine(0,i*UNIT_SIZE,SCREEN_WIDTH,i*UNIT_SIZE );
         }
     }
@@ -223,8 +206,8 @@ public class GamePanel extends JPanel implements ActionListener{
         if(running){
             startContainer.setVisible(!running);
             textLabel.setVisible(!running);
-            radioPanel.setVisible(!running);
-            if(assist){ gridLines(g);}//Shows Grid Lines
+            radioContainer.setVisible(!running);
+            if(assist){gridLines(g);}//Shows Grid Lines
             //Object figures on the Screen
             g.setColor(Color.red);
             g.fillOval(objectX, objectY, UNIT_SIZE, UNIT_SIZE);
@@ -256,7 +239,7 @@ public class GamePanel extends JPanel implements ActionListener{
     //Show Score Method
     public void showScore(Graphics g){
         g.setColor(Color.red);
-            g.setFont(new Font("Ink Free",Font.BOLD,20));
+            g.setFont(new Font("Consolas",Font.BOLD,20));
             FontMetrics metrics = getFontMetrics(g.getFont());
             g.drawString("Score: "+objectsEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+objectsEaten))/2, g.getFont().getSize());
     }
@@ -336,9 +319,9 @@ public class GamePanel extends JPanel implements ActionListener{
         textLabel = new JLabel();
         textLabel.setBackground(Color.black);
         textLabel.setForeground(Color.red);
-        textLabel.setFont(new Font("Ink Free",Font.BOLD,SCREEN_WIDTH/textToDisplay.length()));
+        textLabel.setFont(new Font("Ink Free",Font.BOLD,(int)(SCREEN_WIDTH/textToDisplay.length()*0.6)));
         this.add(textLabel);
-        // If the text is "Welcome! " + username, display it differently
+        // If the text is "Welcome " + username, display it differently
         if(textToDisplay.startsWith("Welcome ") && username !=null){
             textToDisplay+=username+"!";
         }
@@ -351,7 +334,7 @@ public class GamePanel extends JPanel implements ActionListener{
         //Game-Over text
         startButton.setText("Re-START");
         startContainer.setVisible(!running);
-        radioPanel.setVisible(!running);
+        radioContainer.setVisible(!running);
     }   
     @Override
     public void actionPerformed(ActionEvent e) {
