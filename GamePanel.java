@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Random;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -331,8 +330,6 @@ public class GamePanel extends JPanel implements ActionListener{
     }
     //Game Over Method
     public void gameOver(Graphics g){
-        //Showing the score after game
-        //showScore(g);
         //Game-Over text
         startButton.setText("Re-START");
         startContainer.setVisible(!running);
@@ -373,12 +370,11 @@ public class GamePanel extends JPanel implements ActionListener{
                     if(direction != 'U'){
                         direction = 'D';
                     }
-            
                 default:
                     break;
             }
         }
     }
-    
-    
 }
+// GamePanel Design Completed }{Made by Husain Rupawalla}
+//Took around 7 days to complete from scratch {Signing off on 10th Jan 2024}
