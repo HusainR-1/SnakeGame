@@ -203,11 +203,11 @@ public class GamePanel extends JPanel implements ActionListener{
     }
     //Draw Method
     public void draw(Graphics g){
+        if(assist && running){gridLines(g);}//Shows Grid Lines
         if(running){
             startContainer.setVisible(!running);
             textLabel.setVisible(!running);
             radioContainer.setVisible(!running);
-            if(assist){gridLines(g);}//Shows Grid Lines
             //Object figures on the Screen
             g.setColor(Color.red);
             g.fillOval(objectX, objectY, UNIT_SIZE, UNIT_SIZE);
@@ -221,20 +221,22 @@ public class GamePanel extends JPanel implements ActionListener{
                     g.setColor(new Color(45,180,0));
                     //For Random Colors (Rainbow Effect)
                     //g.setColor(new Color(random.nextInt(255),random.nextInt(255),random.nextInt(255)));
+                    //Black and White Maestro
+                    // int randomColor = random.nextInt(255);
+                    // g.setColor(new Color(randomColor,randomColor,randomColor));
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }
             //Shows the score while the game is running
-            showScore(g);  
         } 
         else if(played) {
-            //textLabel.setVisible(false);
             gameOver(g);
             if(!running){
                 textLabel.setText("Game Over!");
                 textLabel.setVisible(true);
             }    
         }     
+        if(played || running){showScore(g);} 
     }
     //Show Score Method
     public void showScore(Graphics g){
@@ -330,7 +332,7 @@ public class GamePanel extends JPanel implements ActionListener{
     //Game Over Method
     public void gameOver(Graphics g){
         //Showing the score after game
-        showScore(g);
+        //showScore(g);
         //Game-Over text
         startButton.setText("Re-START");
         startContainer.setVisible(!running);
