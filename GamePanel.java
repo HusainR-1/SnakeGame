@@ -4,24 +4,28 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Random;
+
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements ActionListener{
-    static final int SCREEN_WIDTH = 600; // Width of the panel
-    static final int SCREEN_HEIGHT = 600; // Height of the panel    
+    public static final int SCREEN_WIDTH = 600; // Width of the panel
+    public static final int SCREEN_HEIGHT = 600; // Height of the panel    
     static final int UNIT_SIZE = 25; // Each unit size
     static final int GAME_UNITS = (SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE; // Total no. of units in the game
-    static final int DELAY = 75; // Delay in the movement of the snake
+    int DELAY = 75; // Delay in the movement of the snake
     final int x[] = new int[GAME_UNITS];
     final int y[] = new int[GAME_UNITS];
     int bodyParts;
@@ -32,7 +36,14 @@ public class GamePanel extends JPanel implements ActionListener{
     JButton startButton;
     JCheckBox checkBox;
     JTextField nameField;
+    JLabel textLabel;
+    JPanel startContainer;
+    JPanel detailsContainer;
+    JPanel radioPanel;
     JButton enterNameButton;
+    JRadioButton easyButton;
+    JRadioButton mediumButton;
+    JRadioButton hardButton;
     boolean running = false;
     boolean played = false;
     boolean assist = false;
@@ -43,41 +54,50 @@ public class GamePanel extends JPanel implements ActionListener{
     //Constructor
     GamePanel(){
         random = new Random();
+        //this.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
         this.setPreferredSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setFocusable(true);
-        this.addKeyListener(new MyKeyAdapter());
-        this.setLayout(new FlowLayout(FlowLayout.CENTER,SCREEN_WIDTH/10,275));
+        this.addKeyListener(new MyKeyAdapter());    
+        //this.setLayout(new GridLayout(10,2));
+        this.setLayout(new FlowLayout(FlowLayout.CENTER,100,100));
         name();
     }
     //Creating Name Method
     private void name(){
+        displayText("Welcome ");
         nameField = new JTextField(15);
         
         JLabel nameLabel = new JLabel("Enter your Name: ");
         nameLabel.setForeground(Color.red);
-        
+        nameLabel.setFont(new Font("Consolas",Font.BOLD,20));
         enterNameButton = new JButton("Next");
         enterNameButton.setForeground(Color.red);
         enterNameButton.setBackground(Color.black);
+        enterNameButton.setBorderPainted(false);
+        enterNameButton.setFont(new Font("Consolas",Font.BOLD,20));
         enterNameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
                 username = nameField.getText();
                 if (!username.isEmpty()){
-                    nameField.setVisible(played);
-                    enterNameButton.setVisible(played);
-                    nameLabel.setVisible(played);
+                    textLabel.setVisible(false);
+                    detailsContainer.setVisible(false);
                     repaint();
+                    displayText("Welcome ");
                     createStartButton();
                     assistiveMode();
+                    difficultyMode();
                 }
             }
         });
-        
-        this.add(nameLabel);
-        this.add(nameField);
-        this.add(enterNameButton);
+        detailsContainer = new JPanel();
+        detailsContainer.setForeground(Color.red);
+        detailsContainer.setBackground(Color.black);
+        detailsContainer.add(nameLabel);
+        detailsContainer.add(nameField);
+        detailsContainer.add(enterNameButton);
+        this.add(detailsContainer);
     }
     //Checkbox for Assistive Mode Method
     private void assistiveMode(){
@@ -87,7 +107,6 @@ public class GamePanel extends JPanel implements ActionListener{
         checkBox.setFont(new Font("Consolas",Font.PLAIN,20));
         checkBox.setForeground(Color.red);
         checkBox.setBackground(Color.black);
-        checkBox.setVisible(!running);
         checkBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
@@ -97,8 +116,10 @@ public class GamePanel extends JPanel implements ActionListener{
                 }
             }
         });
-        this.add(checkBox);
-        
+        startContainer = new JPanel(new GridLayout(1,2));
+        startContainer.add(startButton);
+        startContainer.add(checkBox);
+        this.add(startContainer);        
     }
     //Create "START" button
     private void createStartButton(){
@@ -114,8 +135,53 @@ public class GamePanel extends JPanel implements ActionListener{
                 startGame();
             }
         });
-        //Adding the Start button to this pannel
-        this.add(startButton); 
+    }
+    // Difficulty Mode Method
+    private void difficultyMode() {
+        easyButton = new JRadioButton("Easy");
+        easyButton.setForeground(Color.red);
+        easyButton.setBackground(Color.black);
+        mediumButton = new JRadioButton("Medium");
+        mediumButton.setForeground(Color.red);
+        mediumButton.setBackground(Color.black);
+        mediumButton.setSelected(true);
+        hardButton = new JRadioButton("Hard");
+        hardButton.setForeground(Color.red);
+        hardButton.setBackground(Color.black);
+
+        ButtonGroup group = new ButtonGroup();
+        group.add(easyButton);
+        group.add(mediumButton);
+        group.add(hardButton);
+
+        easyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DELAY = 100;
+                System.out.println("You selected Easy difficulty!");
+            }
+        });
+        
+        mediumButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DELAY = 75;
+                System.out.println("You selected Medium difficulty!");
+            }
+        });
+
+        hardButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DELAY = 50;
+                System.out.println("You selected Hard difficulty!");
+            }
+        });
+        radioPanel = new JPanel(new GridLayout(1,3));
+        radioPanel.add(easyButton);
+        radioPanel.add(mediumButton);
+        radioPanel.add(hardButton);
+        this.add(radioPanel);
     }
     //Start Game Method
     public void startGame(){
@@ -131,7 +197,7 @@ public class GamePanel extends JPanel implements ActionListener{
         //Start of the game
         newObject();
         running = true;
-        startButton.setVisible(!running); // Hide the "START" Button
+        startContainer.setVisible(!running); // Hide the "START" Button
         timer = new Timer(DELAY, this);
         timer.start();
     }
@@ -154,9 +220,10 @@ public class GamePanel extends JPanel implements ActionListener{
     }
     //Draw Method
     public void draw(Graphics g){
-        if (!running && !played){displayText(g,"Welcome ");}
         if(running){
-            checkBox.setVisible(!running);
+            startContainer.setVisible(!running);
+            textLabel.setVisible(!running);
+            radioPanel.setVisible(!running);
             if(assist){ gridLines(g);}//Shows Grid Lines
             //Object figures on the Screen
             g.setColor(Color.red);
@@ -177,14 +244,19 @@ public class GamePanel extends JPanel implements ActionListener{
             //Shows the score while the game is running
             showScore(g);  
         } 
-        else if(played){
+        else if(played) {
+            //textLabel.setVisible(false);
             gameOver(g);
+            if(!running){
+                textLabel.setText("Game Over!");
+                textLabel.setVisible(true);
+            }    
         }     
     }
     //Show Score Method
     public void showScore(Graphics g){
         g.setColor(Color.red);
-            g.setFont(new Font("Ink Free",Font.BOLD,40));
+            g.setFont(new Font("Ink Free",Font.BOLD,20));
             FontMetrics metrics = getFontMetrics(g.getFont());
             g.drawString("Score: "+objectsEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+objectsEaten))/2, g.getFont().getSize());
     }
@@ -260,30 +332,27 @@ public class GamePanel extends JPanel implements ActionListener{
         }
     }
     //Display Text Method
-    public void displayText(Graphics g,String textToDisplay){
-        g.setColor(Color.red);
-        g.setFont(new Font("Ink Free",Font.BOLD,75));
-        FontMetrics metrics = getFontMetrics(g.getFont());
+    public void displayText(String textToDisplay){
+        textLabel = new JLabel();
+        textLabel.setBackground(Color.black);
+        textLabel.setForeground(Color.red);
+        textLabel.setFont(new Font("Ink Free",Font.BOLD,SCREEN_WIDTH/textToDisplay.length()));
+        this.add(textLabel);
+        // If the text is "Welcome! " + username, display it differently
         if(textToDisplay.startsWith("Welcome ") && username !=null){
-            // If the text is "Welcome! " + username, display it differently
-        g.drawString("Welcome " + username + "!", (SCREEN_WIDTH - metrics.stringWidth("Welcome " + username + "!")) / 2, SCREEN_HEIGHT / 3);
+            textToDisplay+=username+"!";
         }
-        else {
-            // Otherwise, display the text as usual
-            g.drawString(textToDisplay, (SCREEN_WIDTH - metrics.stringWidth(textToDisplay)) / 2, SCREEN_HEIGHT / 3);
-        }
+        textLabel.setText(textToDisplay);// Otherwise, display the text as usual
     }
     //Game Over Method
     public void gameOver(Graphics g){
         //Showing the score after game
         showScore(g);
         //Game-Over text
-        displayText(g,"Game Over!");
         startButton.setText("Re-START");
-        startButton.setVisible(!running);
-        checkBox.setVisible(!running);
+        startContainer.setVisible(!running);
+        radioPanel.setVisible(!running);
     }   
-
     @Override
     public void actionPerformed(ActionEvent e) {
         //Checks if the game is running
