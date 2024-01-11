@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -41,28 +40,18 @@ public class SnakeColors implements ActionListener {
     //Making a Color Container
     public JPanel colorContainer(){
         rainbowButton = new JRadioButton("Rainbow");
-        rainbowButton.setForeground(Color.red);
-        rainbowButton.setBackground(Color.black);
-        rainbowButton.setFont(new Font("Consolas",Font.BOLD,20));
         standardButton = new JRadioButton("Green");
-        standardButton.setForeground(Color.red);
-        standardButton.setBackground(Color.black);
-        standardButton.setFont(new Font("Consolas",Font.BOLD,20));
         standardButton.setSelected(true);
         blackwhiteButton = new JRadioButton("Black & White");
-        blackwhiteButton.setForeground(Color.red);
-        blackwhiteButton.setBackground(Color.black);
-        blackwhiteButton.setFont(new Font("Consolas",Font.BOLD,20));
         blueButton = new JRadioButton("Blue");
-        blueButton.setForeground(Color.red);
-        blueButton.setBackground(Color.black);
-        blueButton.setFont(new Font("Consolas",Font.BOLD,20));
         
         ButtonGroup group = new ButtonGroup();
         group.add(rainbowButton);
         group.add(standardButton);
         group.add(blackwhiteButton);
         group.add(blueButton);
+
+        GameDesign.standardType(group);
 
         rainbowButton.addActionListener(new ActionListener() {
             @Override

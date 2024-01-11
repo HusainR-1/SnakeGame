@@ -75,13 +75,10 @@ public class GamePanel extends JPanel implements ActionListener{
         nameField = new JTextField(15); //Takes in the UserName
         
         JLabel nameLabel = new JLabel("Enter your Name: "); //Prompt Label 
-        nameLabel.setForeground(Color.red); 
-        nameLabel.setFont(new Font("Consolas",Font.BOLD,20));
         NextButton = new JButton("Next");
-        NextButton.setForeground(Color.red);
-        NextButton.setBackground(Color.black);
+        GameDesign.standardType(nameLabel);
+        GameDesign.standardType(NextButton);
         NextButton.setBorderPainted(false);
-        NextButton.setFont(new Font("Consolas",Font.BOLD,20));
         NextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){ 
@@ -106,10 +103,8 @@ public class GamePanel extends JPanel implements ActionListener{
     private void createStartButton(){
         startButton = new JButton();
         startButton.setText("START GAME");
-        startButton.setFont(new Font("Consolas",Font.BOLD,25));
+        GameDesign.standardType(startButton,25);
         startButton.setBorderPainted(false);
-        startButton.setForeground(Color.red);
-        startButton.setBackground(Color.black);
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
@@ -124,9 +119,7 @@ public class GamePanel extends JPanel implements ActionListener{
         checkBox = new JCheckBox();
         checkBox.setText("Assistive Mode");
         checkBox.setFocusable(false);
-        checkBox.setFont(new Font("Consolas",Font.BOLD,20));
-        checkBox.setForeground(Color.red);
-        checkBox.setBackground(Color.black);
+        GameDesign.standardType(checkBox);
         checkBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
@@ -141,23 +134,17 @@ public class GamePanel extends JPanel implements ActionListener{
     // Difficulty Mode Method
     private void difficultyMode() {
         easyButton = new JRadioButton("Easy");
-        easyButton.setForeground(Color.red);
-        easyButton.setBackground(Color.black);
-        easyButton.setFont(new Font("Consolas",Font.BOLD,20));
         mediumButton = new JRadioButton("Medium");
         mediumButton.setForeground(Color.red);
-        mediumButton.setBackground(Color.black);
-        mediumButton.setFont(new Font("Consolas",Font.BOLD,20));
         mediumButton.setSelected(true);
         hardButton = new JRadioButton("Hard");
-        hardButton.setForeground(Color.red);
-        hardButton.setBackground(Color.black);
-        hardButton.setFont(new Font("Consolas",Font.BOLD,20));
 
         ButtonGroup group = new ButtonGroup();
         group.add(easyButton);
         group.add(mediumButton);
         group.add(hardButton);
+
+        GameDesign.standardType(group);
 
         easyButton.addActionListener(new ActionListener() {
             @Override
