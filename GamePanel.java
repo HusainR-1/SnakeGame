@@ -49,6 +49,7 @@ public class GamePanel extends JPanel implements ActionListener{
     String username;
     Timer timer;
     Random random;
+    SnakeColors flair;
 
     //Constructor
     GamePanel(){
@@ -58,8 +59,16 @@ public class GamePanel extends JPanel implements ActionListener{
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());    
         this.setLayout(new FlowLayout(FlowLayout.CENTER,100,100));
+        SnakeColorsObject();
         name();
     }
+    //Creating an object
+    public void SnakeColorsObject(){
+        this.setVisible(true);
+        flair = new SnakeColors();
+        this.add(flair.colorContainer()); 
+    }
+
     //Creating Name Method
     private void name(){
         displayText("Welcome "); //Displays Welcome
@@ -75,10 +84,11 @@ public class GamePanel extends JPanel implements ActionListener{
         NextButton.setFont(new Font("Consolas",Font.BOLD,20));
         NextButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e){ 
                 username = nameField.getText();
                 if (!username.isEmpty()){
                     detailsContainer.setVisible(false);
+                    flair.setRadioButtonsVisible(false);
                     textLabel.setText("Welcome "+username+"!"); // Renames with the UserName
                     createStartButton();
                 }
@@ -218,10 +228,11 @@ public class GamePanel extends JPanel implements ActionListener{
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
                 else{
+                    flair.checkColor(g);
                     //SnakeColors.setStandard(g);//For Standard Green Color
                     //SnakeColors.setRainbowColor(g);//For Random Colors (Rainbow Effect)
                     //SnakeColors.setBlackWhite(g);//Black and White Maestro
-                    SnakeColors.setBlue(g);//Blue Color
+                    //SnakeColors.setBlue(g);//Blue Color
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }

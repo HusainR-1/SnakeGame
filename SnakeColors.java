@@ -16,7 +16,7 @@ public class SnakeColors implements ActionListener {
     JRadioButton blackwhiteButton;
     JRadioButton blueButton;
     JPanel colorPanel;
-    String snakeColor = "green";
+    public String snakeColor = "green";
     //For Random Colors (Rainbow Effect)
     public static void setRainbowColor(Graphics g){
         g.setColor(new Color(random.nextInt(255),random.nextInt(255),random.nextInt(255)));
@@ -39,7 +39,7 @@ public class SnakeColors implements ActionListener {
     }
 
     //Making a Color Container
-    public void colorContainer(Graphics g){
+    public JPanel colorContainer(){
         rainbowButton = new JRadioButton("Rainbow");
         rainbowButton.setForeground(Color.red);
         rainbowButton.setBackground(Color.black);
@@ -57,7 +57,7 @@ public class SnakeColors implements ActionListener {
         blueButton.setForeground(Color.red);
         blueButton.setBackground(Color.black);
         blueButton.setFont(new Font("Consolas",Font.BOLD,20));
-
+        
         ButtonGroup group = new ButtonGroup();
         group.add(rainbowButton);
         group.add(standardButton);
@@ -66,34 +66,38 @@ public class SnakeColors implements ActionListener {
 
         rainbowButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {setRainbowColor(g);}});
-        
+            public void actionPerformed(ActionEvent e) {snakeColor = "rainbow";System.out.println(snakeColor);}});
         standardButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {setStandard(g);}});
-
+            public void actionPerformed(ActionEvent e) {snakeColor = "green";System.out.println(snakeColor);}});
         blackwhiteButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {setBlackWhite(g);}});
-
+            public void actionPerformed(ActionEvent e) {snakeColor = "B&W";System.out.println(snakeColor);}});
+        blueButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {snakeColor = "blue";System.out.println(snakeColor);}});
+        
         colorPanel = new JPanel(new GridLayout(4,1));
         colorPanel.add(rainbowButton);
         colorPanel.add(standardButton);
         colorPanel.add(blackwhiteButton);
         colorPanel.add(blueButton);
-    }   
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == rainbowButton) {
-            snakeColor="rainbow";
-        } else if (e.getSource() == standardButton) {
-            snakeColor="green";
-        } else if (e.getSource() == blackwhiteButton) {
-            snakeColor="b&w";
-        } else if (e.getSource() == blueButton) {
-            snakeColor="blue";
-        }
+        return colorPanel;
     }
+
+    public void setRadioButtonsVisible(boolean visible) {
+        colorPanel.setVisible(visible);
+    }
+
+    //Checks Color Method
+    public  void checkColor(Graphics g){
+        if(snakeColor == "rainbow"){setRainbowColor(g);}
+        else if (snakeColor == "B&W"){setBlackWhite(g);}
+        else if (snakeColor == "blue"){setBlue(g);}
+        else {setStandard(g);}
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {}   
 }
 
