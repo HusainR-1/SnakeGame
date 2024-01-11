@@ -39,7 +39,7 @@ public class GamePanel extends JPanel implements ActionListener{
     JPanel startContainer;
     JPanel detailsContainer;
     JPanel radioContainer;
-    JButton enterNameButton;
+    JButton NextButton;
     JRadioButton easyButton;
     JRadioButton mediumButton;
     JRadioButton hardButton;
@@ -68,12 +68,12 @@ public class GamePanel extends JPanel implements ActionListener{
         JLabel nameLabel = new JLabel("Enter your Name: "); //Prompt Label 
         nameLabel.setForeground(Color.red); 
         nameLabel.setFont(new Font("Consolas",Font.BOLD,20));
-        enterNameButton = new JButton("Next");
-        enterNameButton.setForeground(Color.red);
-        enterNameButton.setBackground(Color.black);
-        enterNameButton.setBorderPainted(false);
-        enterNameButton.setFont(new Font("Consolas",Font.BOLD,20));
-        enterNameButton.addActionListener(new ActionListener() {
+        NextButton = new JButton("Next");
+        NextButton.setForeground(Color.red);
+        NextButton.setBackground(Color.black);
+        NextButton.setBorderPainted(false);
+        NextButton.setFont(new Font("Consolas",Font.BOLD,20));
+        NextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
                 username = nameField.getText();
@@ -89,7 +89,7 @@ public class GamePanel extends JPanel implements ActionListener{
         detailsContainer.setBackground(Color.black);
         detailsContainer.add(nameLabel);
         detailsContainer.add(nameField);
-        detailsContainer.add(enterNameButton);
+        detailsContainer.add(NextButton);
         this.add(detailsContainer);
     }
     //Create "START" button
@@ -213,8 +213,8 @@ public class GamePanel extends JPanel implements ActionListener{
             
             for(int i = 0; i < bodyParts; i++){
                 if(i==0){
-                    g.setColor(Color.green);//Default green head
-                    //g.setColor(Color.blue);//Blue head for blue body
+                    //g.setColor(Color.green);//Default green head
+                    g.setColor(Color.blue);//Blue head for blue body
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
                 else{
