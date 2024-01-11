@@ -213,16 +213,15 @@ public class GamePanel extends JPanel implements ActionListener{
             
             for(int i = 0; i < bodyParts; i++){
                 if(i==0){
-                    g.setColor(Color.green);
+                    g.setColor(Color.green);//Default green head
+                    //g.setColor(Color.blue);//Blue head for blue body
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
                 else{
-                    g.setColor(new Color(45,180,0));
-                    //For Random Colors (Rainbow Effect)
-                    //g.setColor(new Color(random.nextInt(255),random.nextInt(255),random.nextInt(255)));
-                    //Black and White Maestro
-                    // int randomColor = random.nextInt(255);
-                    // g.setColor(new Color(randomColor,randomColor,randomColor));
+                    //SnakeColors.setStandard(g);//For Standard Green Color
+                    //SnakeColors.setRainbowColor(g);//For Random Colors (Rainbow Effect)
+                    //SnakeColors.setBlackWhite(g);//Black and White Maestro
+                    SnakeColors.setBlue(g);//Blue Color
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }
