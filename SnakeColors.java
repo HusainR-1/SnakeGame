@@ -55,16 +55,16 @@ public class SnakeColors implements ActionListener {
 
         rainbowButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {snakeColor = "rainbow";System.out.println(snakeColor);}});
+            public void actionPerformed(ActionEvent e) {snakeColor = "rainbow";}});
         standardButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {snakeColor = "green";System.out.println(snakeColor);}});
+            public void actionPerformed(ActionEvent e) {snakeColor = "green";}});
         blackwhiteButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {snakeColor = "B&W";System.out.println(snakeColor);}});
+            public void actionPerformed(ActionEvent e) {snakeColor = "B&W";}});
         blueButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {snakeColor = "blue";System.out.println(snakeColor);}});
+            public void actionPerformed(ActionEvent e) {snakeColor = "blue";}});
         
         colorPanel = new JPanel(new GridLayout(4,1));
         colorPanel.add(rainbowButton);
@@ -86,6 +86,13 @@ public class SnakeColors implements ActionListener {
         else if (snakeColor == "blue"){setBlue(g);}
         else {setStandard(g);}
     }
+
+    public void checkHeadColor(Graphics g){
+        if(snakeColor == "blue" ){g.setColor(Color.blue);}
+        else if(snakeColor == "B&W"){g.setColor(Color.white);}
+        else{g.setColor(Color.green);}
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {}   
 }

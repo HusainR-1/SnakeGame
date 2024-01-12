@@ -29,8 +29,8 @@ public class GamePanel extends JPanel implements ActionListener{
     final int y[] = new int[GAME_UNITS];
     int bodyParts;
     int objectsEaten;
-    int objectX;
-    int objectY;
+    //int objectzX;
+    //int objectzY;
     char direction;
     JButton startButton;
     JCheckBox checkBox;
@@ -50,7 +50,8 @@ public class GamePanel extends JPanel implements ActionListener{
     Timer timer;
     Random random;
     SnakeColors flair;
-
+    Item item;
+    
     //Constructor
     GamePanel(){
         random = new Random();
@@ -60,15 +61,19 @@ public class GamePanel extends JPanel implements ActionListener{
         this.addKeyListener(new MyKeyAdapter());    
         this.setLayout(new FlowLayout(FlowLayout.CENTER,100,100));
         SnakeColorsObject();
+        ItemObject();
         name();
     }
-    //Creating an object
+    // Snake Colors Object
     public void SnakeColorsObject(){
         this.setVisible(true);
         flair = new SnakeColors();
         this.add(flair.colorContainer()); 
     }
-
+    // Object Object
+    public void ItemObject(){
+        item = new Item();
+    }
     //Creating Name Method
     private void name(){
         displayText("Welcome "); //Displays Welcome
@@ -176,7 +181,7 @@ public class GamePanel extends JPanel implements ActionListener{
             y[i] = 0;
         }
         //Start of the game
-        newObject();
+        item.New(SCREEN_HEIGHT, UNIT_SIZE);
         running = true;
         startContainer.setVisible(!running); // Hide the "START" Button
         timer = new Timer(DELAY, this);
@@ -206,20 +211,15 @@ public class GamePanel extends JPanel implements ActionListener{
             radioContainer.setVisible(!running);
             //Object figures on the Screen
             g.setColor(Color.red);
-            g.fillOval(objectX, objectY, UNIT_SIZE, UNIT_SIZE);
+            g.fillOval(item.x, item.y, UNIT_SIZE, UNIT_SIZE);
             
             for(int i = 0; i < bodyParts; i++){
                 if(i==0){
-                    //g.setColor(Color.green);//Default green head
-                    g.setColor(Color.blue);//Blue head for blue body
+                    flair.checkHeadColor(g);
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
                 else{
                     flair.checkColor(g);
-                    //SnakeColors.setStandard(g);//For Standard Green Color
-                    //SnakeColors.setRainbowColor(g);//For Random Colors (Rainbow Effect)
-                    //SnakeColors.setBlackWhite(g);//Black and White Maestro
-                    //SnakeColors.setBlue(g);//Blue Color
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }
@@ -241,12 +241,9 @@ public class GamePanel extends JPanel implements ActionListener{
             FontMetrics metrics = getFontMetrics(g.getFont());
             g.drawString("Score: "+objectsEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+objectsEaten))/2, g.getFont().getSize());
     }
-    //New Object Method
-    public void newObject(){
-        //Creating random co-ordinates for the position of the Object
-        objectX = random.nextInt((int)(SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
-        objectY = random.nextInt((int)(SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
-    }
+    
+    
+    
     //Move Method   
     public void move(){
         for(int i = bodyParts;i>0;i--){
@@ -271,10 +268,10 @@ public class GamePanel extends JPanel implements ActionListener{
     }
     //Check Object Method
     public void checkObject(){
-        if((x[0]==objectX) && (y[0]==objectY)){
+        if((x[0]==item.x) && (y[0]==item.y)){
             bodyParts++;
             objectsEaten++;
-            newObject();
+            item.New(SCREEN_HEIGHT, UNIT_SIZE);
         }
     }
     //Check Collisions Method
