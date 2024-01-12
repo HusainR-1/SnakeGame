@@ -17,5 +17,14 @@ public class Item {
         g.setColor(Color.red);
         g.fillOval(x,y, UNIT_SIZE, UNIT_SIZE);
     }
+
+    //Check Item Method
+    public void Check(){
+        if((GamePanel.x[0]==x) && (GamePanel.y[0]==y)){
+            GamePanel.bodyParts++;
+            GamePanel.itemsEaten++;
+            New();
+        }
+    }
 }
 

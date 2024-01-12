@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.Random;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -20,42 +19,37 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements ActionListener{
-    public static final int SCREEN_WIDTH = 600; // Width of the panel
-    public static final int SCREEN_HEIGHT = 600; // Height of the panel    
+    static final int SCREEN_WIDTH = 600; // Width of the panel
+    static final int SCREEN_HEIGHT = 600; // Height of the panel    
     static final int UNIT_SIZE = 25; // Each unit size
     static final int GAME_UNITS = (SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE; // Total no. of units in the game
-    int DELAY = 75; // Delay in the movement of the snake (Default Medium Mode)
-    final int x[] = new int[GAME_UNITS];
-    final int y[] = new int[GAME_UNITS];
-    int bodyParts;
-    int objectsEaten;
-    //int objectzX;
-    //int objectzY;
+    static int DELAY = 75; // Delay in the movement of the snake (Default Medium Mode)
+    final static int x[] = new int[GAME_UNITS];
+    final static int y[] = new int[GAME_UNITS];
+    static int bodyParts;
+    static int itemsEaten;
+    static String username;
     char direction;
-    JButton startButton;
     JCheckBox checkBox;
     JTextField nameField;
-    //JLabel textLabel;
-    JPanel startContainer;
-    JPanel detailsContainer;
-    JPanel radioContainer;
+    JButton startButton;
     JButton NextButton;
     JRadioButton easyButton;
     JRadioButton mediumButton;
     JRadioButton hardButton;
+    JPanel startContainer;
+    JPanel detailsContainer;
+    JPanel radioContainer;
     boolean running;
     boolean played;
     boolean assist;
-    public static String username;
-    Timer timer;
-    Random random;
-    SnakeColors flair;
     Item item;
     GameDesign gameDesign;
+    SnakeColors flair;
+    Timer timer;
     
     //Constructor
     GamePanel(){
-        random = new Random();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setFocusable(true);
@@ -179,7 +173,7 @@ public class GamePanel extends JPanel implements ActionListener{
     //Start Game Method
     public void startGame(){
         bodyParts = 6;
-        objectsEaten = 0;
+        itemsEaten = 0;
         direction = 'R';
 
         // Initialize snake position
@@ -227,7 +221,6 @@ public class GamePanel extends JPanel implements ActionListener{
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }
-            //Shows the score while the game is running
         } 
         else if(played) {
             gameOver(g);
@@ -241,13 +234,10 @@ public class GamePanel extends JPanel implements ActionListener{
     //Show Score Method
     public void showScore(Graphics g){
         g.setColor(Color.red);
-            g.setFont(new Font("Consolas",Font.BOLD,20));
-            FontMetrics metrics = getFontMetrics(g.getFont());
-            g.drawString("Score: "+objectsEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+objectsEaten))/2, g.getFont().getSize());
+        g.setFont(new Font("Consolas",Font.BOLD,20));
+        FontMetrics metrics = getFontMetrics(g.getFont());
+        g.drawString("Score: "+itemsEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+itemsEaten))/2, g.getFont().getSize());
     }
-    
-    
-    
     //Move Method   
     public void move(){
         for(int i = bodyParts;i>0;i--){
@@ -270,50 +260,25 @@ public class GamePanel extends JPanel implements ActionListener{
                 break;
         }
     }
-    //Check Object Method
-    public void checkObject(){
-        if((x[0]==item.x) && (y[0]==item.y)){
-            bodyParts++;
-            objectsEaten++;
-            item.New();
-        }
-    }
     //Check Collisions Method
     public void checkCollisions(){
         for(int i = bodyParts;i>0;i--){
             //Checks if the head colided with the body
             if((x[0] == x[i]) && (y[0] == y[i]) ){
-                //Works as a gameOver setup
+                running = false;
+                played = true;
+            }
+            // Checks if head touches left border || right border || top border || bottom border
+            if(x[0] < 0 || x[0] > SCREEN_WIDTH ||  y[0] < 0 || y[0] > SCREEN_HEIGHT){
                 running = false;
                 played = true;
             }
         }
-        //checks if head touches left border
-        if(x[0] < 0){
-            running = false;
-            played = true;
-        }
-        //checks if head touches right border
-        if(x[0] > SCREEN_WIDTH){
-            running = false;
-             played = true;
-        }
-        //checks if head touches top border
-        if(y[0] < 0){
-            running = false;
-             played = true;
-        }
-        //checks if head touches bottom border
-        if(y[0] > SCREEN_HEIGHT){
-            running = false;
-            played = true;
-        }  
         //Stop the Timer , if game it's not running
         if(!running){
             timer.stop();
         }
     }
-    
     //Game Over Method
     public void gameOver(Graphics g){
         //Game-Over text
@@ -323,10 +288,9 @@ public class GamePanel extends JPanel implements ActionListener{
     }   
     @Override
     public void actionPerformed(ActionEvent e) {
-        //Checks if the game is running
         if(running){
             move();
-            checkObject();
+            item.Check();
             checkCollisions();
         }  
         repaint();
