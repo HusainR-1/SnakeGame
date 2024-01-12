@@ -35,7 +35,7 @@ public class GamePanel extends JPanel implements ActionListener{
     JButton startButton;
     JCheckBox checkBox;
     JTextField nameField;
-    JLabel textLabel;
+    //JLabel textLabel;
     JPanel startContainer;
     JPanel detailsContainer;
     JPanel radioContainer;
@@ -46,11 +46,12 @@ public class GamePanel extends JPanel implements ActionListener{
     boolean running;
     boolean played;
     boolean assist;
-    String username;
+    public static String username;
     Timer timer;
     Random random;
     SnakeColors flair;
     Item item;
+    GameDesign gameDesign;
     
     //Constructor
     GamePanel(){
@@ -62,21 +63,27 @@ public class GamePanel extends JPanel implements ActionListener{
         this.setLayout(new FlowLayout(FlowLayout.CENTER,100,100));
         SnakeColorsObject();
         ItemObject();
+        GameDesignObject();
         name();
     }
-    // Snake Colors Object
+    // SnakeColors Object
     public void SnakeColorsObject(){
         this.setVisible(true);
         flair = new SnakeColors();
         this.add(flair.colorContainer()); 
     }
-    // Object Object
+    // Item Object
     public void ItemObject(){
         item = new Item();
     }
+    // GameDesign Object
+    public void GameDesignObject(){
+        gameDesign = new GameDesign();
+    }
+
     //Creating Name Method
     private void name(){
-        displayText("Welcome "); //Displays Welcome
+        this.add(gameDesign.displayText("Welcome ")); //Displays Welcome
         nameField = new JTextField(15); //Takes in the UserName
         
         JLabel nameLabel = new JLabel("Enter your Name: "); //Prompt Label 
@@ -91,7 +98,7 @@ public class GamePanel extends JPanel implements ActionListener{
                 if (!username.isEmpty()){
                     detailsContainer.setVisible(false);
                     flair.setRadioButtonsVisible(false);
-                    textLabel.setText("Welcome "+username+"!"); // Renames with the UserName
+                    gameDesign.textLabel.setText("Welcome "+username+"!"); // Renames with the UserName
                     createStartButton();
                 }
             }
@@ -181,7 +188,7 @@ public class GamePanel extends JPanel implements ActionListener{
             y[i] = 0;
         }
         //Start of the game
-        item.New(SCREEN_HEIGHT, UNIT_SIZE);
+        item.New(); // Creates new item
         running = true;
         startContainer.setVisible(!running); // Hide the "START" Button
         timer = new Timer(DELAY, this);
@@ -204,15 +211,12 @@ public class GamePanel extends JPanel implements ActionListener{
     }
     //Draw Method
     public void draw(Graphics g){
-        if(assist && running){gridLines(g);}//Shows Grid Lines
         if(running){
+            if(assist){gridLines(g);} // Show Grid Lines
             startContainer.setVisible(!running);
-            textLabel.setVisible(!running);
+            gameDesign.textLabel.setVisible(!running);
             radioContainer.setVisible(!running);
-            //Object figures on the Screen
-            g.setColor(Color.red);
-            g.fillOval(item.x, item.y, UNIT_SIZE, UNIT_SIZE);
-            
+            item.Design(g, UNIT_SIZE);
             for(int i = 0; i < bodyParts; i++){
                 if(i==0){
                     flair.checkHeadColor(g);
@@ -228,8 +232,8 @@ public class GamePanel extends JPanel implements ActionListener{
         else if(played) {
             gameOver(g);
             if(!running){
-                textLabel.setText("Game Over!");
-                textLabel.setVisible(true);
+                gameDesign.textLabel.setText("Game Over!");
+                gameDesign.textLabel.setVisible(true);
             }    
         }     
         if(played || running){showScore(g);} 
@@ -271,7 +275,7 @@ public class GamePanel extends JPanel implements ActionListener{
         if((x[0]==item.x) && (y[0]==item.y)){
             bodyParts++;
             objectsEaten++;
-            item.New(SCREEN_HEIGHT, UNIT_SIZE);
+            item.New();
         }
     }
     //Check Collisions Method
@@ -309,19 +313,7 @@ public class GamePanel extends JPanel implements ActionListener{
             timer.stop();
         }
     }
-    //Display Text Method
-    public void displayText(String textToDisplay){
-        textLabel = new JLabel();
-        textLabel.setBackground(Color.black);
-        textLabel.setForeground(Color.red);
-        textLabel.setFont(new Font("Ink Free",Font.BOLD,(int)(SCREEN_WIDTH/textToDisplay.length()*0.6)));
-        this.add(textLabel);
-        // If the text is "Welcome " + username, display it differently
-        if(textToDisplay.startsWith("Welcome ") && username !=null){
-            textToDisplay+=username+"!";
-        }
-        textLabel.setText(textToDisplay);// Otherwise, display the text as usual
-    }
+    
     //Game Over Method
     public void gameOver(Graphics g){
         //Game-Over text

@@ -1,3 +1,5 @@
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Random;
 
 public class Item {
@@ -6,12 +8,14 @@ public class Item {
     int y;
     Random random = new Random();
 
-    Item(){
-        System.out.println("Generated");
+    public void New(){
+        x = random.nextInt((int)(GamePanel.SCREEN_HEIGHT/GamePanel.UNIT_SIZE))*GamePanel.UNIT_SIZE;
+        y = random.nextInt((int)(GamePanel.SCREEN_WIDTH/GamePanel.UNIT_SIZE))*GamePanel.UNIT_SIZE;
     }
-    public void New(int SCREEN_HEIGHT,int UNIT_SIZE){
-        x = random.nextInt((int)(SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
-        y = random.nextInt((int)(SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
+
+    public void Design(Graphics g,int UNIT_SIZE){
+        g.setColor(Color.red);
+        g.fillOval(x,y, UNIT_SIZE, UNIT_SIZE);
     }
 }
 

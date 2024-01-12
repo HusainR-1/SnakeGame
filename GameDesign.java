@@ -8,6 +8,8 @@ import javax.swing.JLabel;
 
 public class GameDesign {
 
+    JLabel textLabel;
+
     public static void standardType(AbstractButton button){
         button.setForeground(Color.red);
         button.setBackground(Color.black);
@@ -32,4 +34,15 @@ public class GameDesign {
         label.setBackground(Color.black);
         label.setFont(new Font("Consolas",Font.BOLD,20));
     }
+
+    public  JLabel displayText(String textToDisplay){
+        textLabel = new JLabel();
+        textLabel.setBackground(Color.black);
+        textLabel.setForeground(Color.red);
+        textLabel.setFont(new Font("Ink Free",Font.BOLD,(int)(GamePanel.SCREEN_WIDTH/textToDisplay.length()*0.6)));
+        textLabel.setText(textToDisplay);// Display the text as usual
+        return textLabel;
+    }
+
+
 }
