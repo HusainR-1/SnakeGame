@@ -1,7 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.GridLayout;
@@ -9,12 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
@@ -23,30 +20,25 @@ public class GamePanel extends JPanel implements ActionListener{
     static final int SCREEN_HEIGHT = 600; // Height of the panel    
     static final int UNIT_SIZE = 25; // Each unit size
     static final int GAME_UNITS = (SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE; // Total no. of units in the game
-    static int DELAY = 75; // Delay in the movement of the snake (Default Medium Mode)
     final static int x[] = new int[GAME_UNITS];
     final static int y[] = new int[GAME_UNITS];
     static int bodyParts;
-    static int itemsEaten;
     static String username;
     char direction;
     JCheckBox checkBox;
     JTextField nameField;
     JButton startButton;
     JButton NextButton;
-    JRadioButton easyButton;
-    JRadioButton mediumButton;
-    JRadioButton hardButton;
     JPanel startContainer;
     JPanel detailsContainer;
-    JPanel radioContainer;
     boolean running;
     boolean played;
     boolean assist;
     Item item;
     GameDesign gameDesign;
-    SnakeColors flair;
+    SnakeColors snakeColors;
     Timer timer;
+    GameElements gameElements;
     
     //Constructor
     GamePanel(){
@@ -55,16 +47,17 @@ public class GamePanel extends JPanel implements ActionListener{
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());    
         this.setLayout(new FlowLayout(FlowLayout.CENTER,100,100));
-        SnakeColorsObject();
-        ItemObject();
         GameDesignObject();
+        GameElements();
         name();
+        ItemObject();
+        SnakeColorsObject();
     }
     // SnakeColors Object
     public void SnakeColorsObject(){
         this.setVisible(true);
-        flair = new SnakeColors();
-        this.add(flair.colorContainer()); 
+        snakeColors = new SnakeColors();
+        this.add(snakeColors.colorContainer()); 
     }
     // Item Object
     public void ItemObject(){
@@ -74,12 +67,15 @@ public class GamePanel extends JPanel implements ActionListener{
     public void GameDesignObject(){
         gameDesign = new GameDesign();
     }
+    // GameElements Object
+    public void GameElements(){
+        gameElements = new GameElements();
+        this.add(gameDesign.displayText("Welcome ")); //Displays Welcome
+    }
 
     //Creating Name Method
     private void name(){
-        this.add(gameDesign.displayText("Welcome ")); //Displays Welcome
         nameField = new JTextField(15); //Takes in the UserName
-        
         JLabel nameLabel = new JLabel("Enter your Name: "); //Prompt Label 
         NextButton = new JButton("Next");
         GameDesign.standardType(nameLabel);
@@ -91,15 +87,14 @@ public class GamePanel extends JPanel implements ActionListener{
                 username = nameField.getText();
                 if (!username.isEmpty()){
                     detailsContainer.setVisible(false);
-                    flair.setRadioButtonsVisible(false);
+                    snakeColors.setRadioButtonsVisible(false);
                     gameDesign.textLabel.setText("Welcome "+username+"!"); // Renames with the UserName
                     createStartButton();
                 }
             }
         });
         detailsContainer = new JPanel();
-        detailsContainer.setForeground(Color.red);
-        detailsContainer.setBackground(Color.black);
+        GameDesign.standardType(detailsContainer);
         detailsContainer.add(nameLabel);
         detailsContainer.add(nameField);
         detailsContainer.add(NextButton);
@@ -118,7 +113,7 @@ public class GamePanel extends JPanel implements ActionListener{
             }
         });
         assistiveMode();
-        difficultyMode();
+        this.add(gameElements.difficultyMode());
     }
     //Checkbox for Assistive Mode Method
     private void assistiveMode(){
@@ -137,43 +132,10 @@ public class GamePanel extends JPanel implements ActionListener{
         startContainer.add(checkBox);
         this.add(startContainer);        
     }
-    // Difficulty Mode Method
-    private void difficultyMode() {
-        easyButton = new JRadioButton("Easy");
-        mediumButton = new JRadioButton("Medium");
-        mediumButton.setForeground(Color.red);
-        mediumButton.setSelected(true);
-        hardButton = new JRadioButton("Hard");
-
-        ButtonGroup group = new ButtonGroup();
-        group.add(easyButton);
-        group.add(mediumButton);
-        group.add(hardButton);
-
-        GameDesign.standardType(group);
-
-        easyButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {DELAY = 100;}});
-        
-        mediumButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {DELAY = 75;}});
-
-        hardButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {DELAY = 50;}});
-
-        radioContainer = new JPanel(new GridLayout(3,1));
-        radioContainer.add(easyButton);
-        radioContainer.add(mediumButton);
-        radioContainer.add(hardButton);
-        this.add(radioContainer);
-    }
     //Start Game Method
     public void startGame(){
         bodyParts = 6;
-        itemsEaten = 0;
+        Item.Eaten = 0;
         direction = 'R';
 
         // Initialize snake position
@@ -185,7 +147,7 @@ public class GamePanel extends JPanel implements ActionListener{
         item.New(); // Creates new item
         running = true;
         startContainer.setVisible(!running); // Hide the "START" Button
-        timer = new Timer(DELAY, this);
+        timer = new Timer(GameElements.DELAY, this);
         timer.start();
     }
     //Paint Component Method
@@ -209,15 +171,15 @@ public class GamePanel extends JPanel implements ActionListener{
             if(assist){gridLines(g);} // Show Grid Lines
             startContainer.setVisible(!running);
             gameDesign.textLabel.setVisible(!running);
-            radioContainer.setVisible(!running);
+            gameElements.radioContainer.setVisible(!running);
             item.Design(g, UNIT_SIZE);
             for(int i = 0; i < bodyParts; i++){
                 if(i==0){
-                    flair.checkHeadColor(g);
+                    snakeColors.checkHeadColor(g);
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
                 else{
-                    flair.checkColor(g);
+                    snakeColors.checkColor(g);
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }
@@ -233,10 +195,10 @@ public class GamePanel extends JPanel implements ActionListener{
     }
     //Show Score Method
     public void showScore(Graphics g){
-        g.setColor(Color.red);
-        g.setFont(new Font("Consolas",Font.BOLD,20));
+        GameDesign.standardType(g);
         FontMetrics metrics = getFontMetrics(g.getFont());
-        g.drawString("Score: "+itemsEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: "+itemsEaten))/2, g.getFont().getSize());
+        g.drawString("Score: "+ Item.Eaten, (GamePanel.SCREEN_WIDTH - metrics.stringWidth("Score: "+Item.Eaten))/2, g.getFont().getSize());
+        
     }
     //Move Method   
     public void move(){
@@ -284,7 +246,7 @@ public class GamePanel extends JPanel implements ActionListener{
         //Game-Over text
         startButton.setText("Re-START");
         startContainer.setVisible(!running);
-        radioContainer.setVisible(!running);
+        gameElements.radioContainer.setVisible(!running);
     }   
     @Override
     public void actionPerformed(ActionEvent e) {

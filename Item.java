@@ -6,6 +6,7 @@ public class Item {
 
     int x;
     int y;
+    static int Eaten;
     Random random = new Random();
 
     public void New(){
@@ -22,7 +23,7 @@ public class Item {
     public void Check(){
         if((GamePanel.x[0]==x) && (GamePanel.y[0]==y)){
             GamePanel.bodyParts++;
-            GamePanel.itemsEaten++;
+            Eaten++;
             New();
         }
     }
