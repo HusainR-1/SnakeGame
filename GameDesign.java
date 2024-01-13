@@ -45,4 +45,15 @@ public class GameDesign {
         return textLabel;
     }
 
+    public static void gridLines(Graphics g){
+        //Drawing Grid Lines 
+        for (int i=0;i<GamePanel.SCREEN_HEIGHT/GamePanel.UNIT_SIZE;i++){
+            //X-Axis
+            g.drawLine(i*GamePanel.UNIT_SIZE, 0, i*GamePanel.UNIT_SIZE, GamePanel.SCREEN_HEIGHT);
+            //Y-Axis
+            g.drawLine(0,i*GamePanel.UNIT_SIZE,GamePanel.SCREEN_WIDTH,i*GamePanel.UNIT_SIZE );
+        }
+    }
+    
+
 }
