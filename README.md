@@ -8,3 +8,6 @@ giving assist mode, different difficulty level and colors of the snake
 
 Created more code modularity for same type of function , like the font,
 avoiding repeated coding and having neat code.
+
+Made different files and tried to make my code human readable
+also made more generalized methods and classes.
