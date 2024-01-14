@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -55,36 +56,38 @@ public class GamePanel extends JPanel implements ActionListener{
     public void GameElements(){
         gameElements = new GameElements();
         this.add(gameDesign.displayText("Welcome ")); //Displays Welcome
+        this.add(gameElements.createNamePanel());
     }
 
     //Initializes all the object
     public void GameInitializer(){
         GameDesignObject();
         GameElements();
-        this.add(gameElements.createName());
-        clickName();
+        clickNext();
         ItemObject();
         SnakeColorsObject();
     }
 
     //Creating Name Method
-    private void clickName(){
-        gameElements.NextButton.addActionListener(new ActionListener() {
+    private void clickNext(){
+        gameElements.nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){ 
                 username = gameElements.nameField.getText();
                 if (!username.isEmpty()){
-                    gameElements.detailsContainer.setVisible(false);
-                    snakeColors.setRadioButtonsVisible(false);
+                    gameElements.namePanel.setVisible(false);
+                    snakeColors.colorPanel.setVisible(false);
                     gameDesign.textLabel.setText("Welcome "+username+"!"); // Renames with the UserName
+                    gameDesign.textLabel.setForeground(Color.pink);
+                    gameDesign.textLabel.setFont(new Font("Arial",Font.BOLD,gameDesign.SIZE("Welcome "+username+"!")));
                     gameElements.createStartButton();
-                    StartButton();
+                    clickStart();
                 }
             }
         });
     }
     
-    private void StartButton(){
+    private void clickStart(){
         this.add(gameElements.difficultyMode());
         gameElements.startButton.addActionListener(new ActionListener() {
             @Override
@@ -93,14 +96,14 @@ public class GamePanel extends JPanel implements ActionListener{
             }
         });
         this.add(gameElements.createAssistiveMode());
-        assistiveMode();
+        clickAssist();
     }
 
-    private void assistiveMode(){
-        gameElements.checkBox.addActionListener(new ActionListener() {
+    private void clickAssist(){
+        gameElements.assistCheckBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                if(gameElements.checkBox.isSelected()){assist = true;}
+                if(gameElements.assistCheckBox.isSelected()){assist = true;}
                 else{assist = false;}
             }});      
     }
@@ -143,7 +146,7 @@ public class GamePanel extends JPanel implements ActionListener{
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
                 else{
-                    snakeColors.checkColor(g);
+                    snakeColors.checkBodyColor(g);
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }
@@ -152,6 +155,7 @@ public class GamePanel extends JPanel implements ActionListener{
             gameOver();
             if(!running){
                 gameDesign.textLabel.setText("Game Over!");
+                gameDesign.textLabel.setFont(new Font("Consolas",Font.BOLD,SCREEN_WIDTH/10));
                 gameDesign.textLabel.setVisible(true);
             }    
         }     

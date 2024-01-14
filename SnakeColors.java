@@ -16,7 +16,7 @@ public class SnakeColors implements ActionListener {
     JRadioButton blueButton;
     JPanel colorPanel;
     public String snakeColor = "green";
-    //For Random Colors (Rainbow Effect)
+    //Random Colors (Rainbow Effect)
     public static void setRainbowColor(Graphics g){
         g.setColor(new Color(random.nextInt(255),random.nextInt(255),random.nextInt(255)));
     }
@@ -27,8 +27,8 @@ public class SnakeColors implements ActionListener {
         g.setColor(new Color(randomColor,randomColor,randomColor));
     }
 
-    //Standard Green Color
-    public static void setStandard(Graphics g){
+    //Green Color
+    public static void setGreen(Graphics g){
         g.setColor(new Color(45,180,0));
     }
 
@@ -75,16 +75,12 @@ public class SnakeColors implements ActionListener {
         return colorPanel;
     }
 
-    public void setRadioButtonsVisible(boolean visible) {
-        colorPanel.setVisible(visible);
-    }
-
     //Checks Color Method
-    public  void checkColor(Graphics g){
+    public  void checkBodyColor(Graphics g){
         if(snakeColor == "rainbow"){setRainbowColor(g);}
         else if (snakeColor == "B&W"){setBlackWhite(g);}
         else if (snakeColor == "blue"){setBlue(g);}
-        else {setStandard(g);}
+        else {setGreen(g);}
     }
 
     public void checkHeadColor(Graphics g){

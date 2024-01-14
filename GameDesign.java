@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 public class GameDesign {
 
     JLabel textLabel;
+    int big;
 
     public static void standardType(JComponent component){
         component.setForeground(Color.red);
@@ -36,11 +37,20 @@ public class GameDesign {
         g.setFont(new Font("Consolas",Font.BOLD,20)); 
     }
 
+    public int SIZE(String textToDisplay){
+        double x = 60;
+        for(int i = 1; i <= textToDisplay.length(); i+=5){
+            x-=10;
+        }
+        big = (int)(textToDisplay.length()+x);
+        return big;
+    }
+
     public  JLabel displayText(String textToDisplay){
         textLabel = new JLabel();
         textLabel.setBackground(Color.black);
         textLabel.setForeground(Color.red);
-        textLabel.setFont(new Font("Ink Free",Font.BOLD,(int)(GamePanel.SCREEN_WIDTH/textToDisplay.length()*0.6)));
+        textLabel.setFont(new Font("Ink Free",Font.BOLD,GamePanel.SCREEN_WIDTH/textToDisplay.length()));
         textLabel.setText(textToDisplay);// Display the text as usual
         return textLabel;
     }

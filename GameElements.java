@@ -13,13 +13,13 @@ public class GameElements implements ActionListener{
 
     static int DELAY = 75; // Delay in the movement of the snake (Default Medium Mode)
     JButton startButton;
-    JButton NextButton;
-    JCheckBox checkBox;
+    JButton nextButton;
+    JCheckBox assistCheckBox;
     JRadioButton easyButton;
     JRadioButton mediumButton;
     JRadioButton hardButton;
     JPanel radioContainer;
-    JPanel detailsContainer;
+    JPanel namePanel;
     JPanel startContainer;
     JTextField nameField;
     JLabel nameLabel;
@@ -59,24 +59,24 @@ public class GameElements implements ActionListener{
         return radioContainer;
     }
 
-    public JPanel createName(){
+    public JPanel createNamePanel(){
 
         nameField = new JTextField(15); //Takes in the UserName
         nameLabel = new JLabel("Enter your Name: "); //Prompt Label 
-        NextButton = new JButton("Next");
+        nextButton = new JButton("Next");
 
-        NextButton.setBorderPainted(false);
+        nextButton.setBorderPainted(false);
 
-        detailsContainer = new JPanel();
-        detailsContainer.add(nameLabel);
-        detailsContainer.add(nameField);
-        detailsContainer.add(NextButton);
+        namePanel = new JPanel();
+        namePanel.add(nameLabel);
+        namePanel.add(nameField);
+        namePanel.add(nextButton);
         
         GameDesign.standardType(nameLabel);
-        GameDesign.standardType(NextButton);
-        GameDesign.standardType(detailsContainer);
+        GameDesign.standardType(nextButton);
+        GameDesign.standardType(namePanel);
         
-        return (detailsContainer);
+        return (namePanel);
     }
 
     public void createStartButton(){
@@ -89,14 +89,14 @@ public class GameElements implements ActionListener{
 
     public JPanel createAssistiveMode(){
 
-        checkBox = new JCheckBox("Assistive Mode");
-        checkBox.setFocusable(false);
+        assistCheckBox = new JCheckBox("Assistive Mode");
+        assistCheckBox.setFocusable(false);
 
-        GameDesign.standardType(checkBox);
+        GameDesign.standardType(assistCheckBox);
         
         startContainer = new JPanel(new GridLayout(2,1));
         startContainer.add(startButton);
-        startContainer.add(checkBox);
+        startContainer.add(assistCheckBox);
 
         return startContainer;        
     }
