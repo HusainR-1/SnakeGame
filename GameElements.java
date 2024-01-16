@@ -18,11 +18,13 @@ public class GameElements implements ActionListener{
     JRadioButton easyButton;
     JRadioButton mediumButton;
     JRadioButton hardButton;
-    JPanel radioContainer;
+    JPanel difficultyPanel;
     JPanel namePanel;
     JPanel startContainer;
     JTextField nameField;
     JLabel nameLabel;
+    JButton showDifficultyButton;
+    JPanel viewDifficultyPanel;
 
     public JPanel difficultyMode() {
 
@@ -51,12 +53,14 @@ public class GameElements implements ActionListener{
             @Override
             public void actionPerformed(ActionEvent e) {DELAY = 50;}});
 
-        radioContainer = new JPanel(new GridLayout(3,1));
-        radioContainer.add(easyButton);
-        radioContainer.add(mediumButton);
-        radioContainer.add(hardButton);
+        difficultyPanel = new JPanel(new GridLayout(1,3));
+        difficultyPanel.add(easyButton);
+        difficultyPanel.add(mediumButton);
+        difficultyPanel.add(hardButton);
 
-        return radioContainer;
+        difficultyPanel.setVisible(false);
+
+        return difficultyPanel;
     }
 
     public JPanel createNamePanel(){
@@ -100,6 +104,18 @@ public class GameElements implements ActionListener{
 
         return startContainer;        
     }
+
+    public JPanel makeDifficultyPanel(){
+        showDifficultyButton = new JButton("Difficulty Level");
+        showDifficultyButton.setBorderPainted(false);
+
+        GameDesign.standardType(showDifficultyButton);
+
+        viewDifficultyPanel = new JPanel(new GridLayout(1,1));
+        viewDifficultyPanel.add(showDifficultyButton);
+
+        return viewDifficultyPanel;
+    }   
 
 
     @Override

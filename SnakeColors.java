@@ -6,15 +6,18 @@ import java.awt.event.ActionListener;
 import java.util.Random;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 public class SnakeColors implements ActionListener {
     private static Random random = new Random();
+    JButton showColorButton;
     JRadioButton rainbowButton;
     JRadioButton standardButton;
     JRadioButton blackwhiteButton;
     JRadioButton blueButton;
     JPanel colorPanel;
+    JPanel viewColorPanel;
     public String snakeColor = "green";
     //Random Colors (Rainbow Effect)
     public static void setRainbowColor(Graphics g){
@@ -66,11 +69,13 @@ public class SnakeColors implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {snakeColor = "blue";}});
         
-        colorPanel = new JPanel(new GridLayout(4,1));
+        colorPanel = new JPanel(new GridLayout(2,2));
         colorPanel.add(rainbowButton);
         colorPanel.add(standardButton);
-        colorPanel.add(blackwhiteButton);
         colorPanel.add(blueButton);
+        colorPanel.add(blackwhiteButton);
+
+        colorPanel.setVisible(false);
 
         return colorPanel;
     }
@@ -87,6 +92,18 @@ public class SnakeColors implements ActionListener {
         if(snakeColor == "blue" ){g.setColor(Color.blue);}
         else if(snakeColor == "B&W"){g.setColor(Color.white);}
         else{g.setColor(Color.green);}
+    }
+
+    public JPanel makeColorPanel(){
+        showColorButton = new JButton("COLORS");
+        showColorButton.setBorderPainted(false);
+
+        GameDesign.standardType(showColorButton);
+
+        viewColorPanel = new JPanel(new GridLayout(1,1));
+        viewColorPanel.add(showColorButton);
+
+        return viewColorPanel;
     }
 
     @Override

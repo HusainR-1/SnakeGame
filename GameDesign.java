@@ -63,7 +63,6 @@ public class GameDesign {
             //Y-Axis
             g.drawLine(0,i*GamePanel.UNIT_SIZE,GamePanel.SCREEN_WIDTH,i*GamePanel.UNIT_SIZE );
         }
-    }
-    
+    }    
 
 }

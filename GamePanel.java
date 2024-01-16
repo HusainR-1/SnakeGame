@@ -23,6 +23,7 @@ public class GamePanel extends JPanel implements ActionListener{
     boolean running;
     boolean played;
     boolean assist;
+    boolean end;
     char direction;
     GameDesign gameDesign;
     GameElements gameElements;
@@ -36,17 +37,14 @@ public class GamePanel extends JPanel implements ActionListener{
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());    
-        this.setLayout(new FlowLayout(FlowLayout.CENTER,100,100));
+        this.setLayout(new FlowLayout(FlowLayout.CENTER,90,90));
         GameInitializer();
     }
-    // SnakeColors Object
-    public void SnakeColorsObject(){
-        snakeColors = new SnakeColors();
-        this.add(snakeColors.colorContainer()); 
-    }
-    // Item Object
-    public void ItemObject(){
-        item = new Item();
+    //Initializes all the object
+    public void GameInitializer(){
+        GameDesignObject();
+        GameElements();
+        clickNext();
     }
     // GameDesign Object
     public void GameDesignObject(){
@@ -58,16 +56,6 @@ public class GamePanel extends JPanel implements ActionListener{
         this.add(gameDesign.displayText("Welcome ")); //Displays Welcome
         this.add(gameElements.createNamePanel());
     }
-
-    //Initializes all the object
-    public void GameInitializer(){
-        GameDesignObject();
-        GameElements();
-        clickNext();
-        ItemObject();
-        SnakeColorsObject();
-    }
-
     //Creating Name Method
     private void clickNext(){
         gameElements.nextButton.addActionListener(new ActionListener() {
@@ -75,30 +63,29 @@ public class GamePanel extends JPanel implements ActionListener{
             public void actionPerformed(ActionEvent e){ 
                 username = gameElements.nameField.getText();
                 if (!username.isEmpty()){
-                    gameElements.namePanel.setVisible(false);
-                    snakeColors.colorPanel.setVisible(false);
-                    gameDesign.textLabel.setText("Welcome "+username+"!"); // Renames with the UserName
-                    gameDesign.textLabel.setForeground(Color.pink);
-                    gameDesign.textLabel.setFont(new Font("Arial",Font.BOLD,gameDesign.SIZE("Welcome "+username+"!")));
+                    username = "Welcome "+username+"!";
                     gameElements.createStartButton();
                     clickStart();
+                    SnakeColorsObject();
+                    gameElements.namePanel.setVisible(false);
+                    gameDesign.textLabel.setText(username); // Renames with the UserName
+                    gameDesign.textLabel.setFont(new Font("Ink Free",Font.BOLD,gameDesign.SIZE(username)));
                 }
             }
         });
     }
-    
     private void clickStart(){
-        this.add(gameElements.difficultyMode());
         gameElements.startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
+                elementsVisibility(false);
+                end = true; 
                 startGame();
             }
         });
         this.add(gameElements.createAssistiveMode());
         clickAssist();
     }
-
     private void clickAssist(){
         gameElements.assistCheckBox.addActionListener(new ActionListener() {
             @Override
@@ -106,10 +93,42 @@ public class GamePanel extends JPanel implements ActionListener{
                 if(gameElements.assistCheckBox.isSelected()){assist = true;}
                 else{assist = false;}
             }});      
+        }
+    // SnakeColors Object
+    public void SnakeColorsObject(){
+        snakeColors = new SnakeColors();
+        this.add(snakeColors.colorContainer()); 
+        this.add(snakeColors.makeColorPanel());
+        this.add(gameElements.difficultyMode());
+        this.add(gameElements.makeDifficultyPanel());
+        showDifficultyPanel();
+        showColorPanel();
     }
+    public void showColorPanel(){
+        snakeColors.showColorButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                snakeColors.viewColorPanel.setVisible(false);
+                snakeColors.colorPanel.setVisible(true);
+            }});
+            ItemObject();
+        }
 
+    public void showDifficultyPanel(){
+        gameElements.showDifficultyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                gameElements.viewDifficultyPanel.setVisible(false);
+                gameElements.difficultyPanel.setVisible(true);
+            }
+        });
+    }
+        // Item Object
+    public void ItemObject(){
+        item = new Item();
+    }
     public void startGame(){
-
+        
         bodyParts = 6;
         Item.Eaten = 0;
         direction = 'R';
@@ -123,7 +142,6 @@ public class GamePanel extends JPanel implements ActionListener{
         //Start of the game
         item.New(); // Creates new item
         running = true;
-        gameElements.startContainer.setVisible(!running); // Hide the "START" Button
         timer = new Timer(GameElements.DELAY, this);
         timer.start();
     }
@@ -132,13 +150,19 @@ public class GamePanel extends JPanel implements ActionListener{
         super.paintComponent(g);
         draw(g);
     }
+
+    public void elementsVisibility(boolean visibility){
+        gameDesign.textLabel.setVisible(visibility);
+        gameElements.startContainer.setVisible(visibility);
+        gameElements.difficultyPanel.setVisible(visibility);
+        gameElements.viewDifficultyPanel.setVisible(visibility);
+        snakeColors.viewColorPanel.setVisible(visibility);
+        snakeColors.colorPanel.setVisible(visibility);
+}
     
     public void draw(Graphics g){
         if(running){
             if(assist){GameDesign.gridLines(g);} // Show Grid Lines
-            gameDesign.textLabel.setVisible(!running);
-            gameElements.startContainer.setVisible(!running);
-            gameElements.radioContainer.setVisible(!running);
             item.Design(g, UNIT_SIZE);
             for(int i = 0; i < bodyParts; i++){
                 if(i==0){
@@ -152,12 +176,10 @@ public class GamePanel extends JPanel implements ActionListener{
             }
         } 
         else if(played) {
-            gameOver();
-            if(!running){
-                gameDesign.textLabel.setText("Game Over!");
-                gameDesign.textLabel.setFont(new Font("Consolas",Font.BOLD,SCREEN_WIDTH/10));
-                gameDesign.textLabel.setVisible(true);
-            }    
+            gameOver(); // Makes the options visible again
+            gameDesign.textLabel.setText("Game Over!");
+            gameDesign.textLabel.setFont(new Font("Ink Free",Font.BOLD,SCREEN_WIDTH/10));
+            gameDesign.textLabel.setVisible(true);
         }     
         if(played || running){showScore(g);} 
     }
@@ -213,9 +235,16 @@ public class GamePanel extends JPanel implements ActionListener{
     }
 
     public void gameOver(){
-        gameElements.startButton.setText("Re-START");
-        gameElements.startContainer.setVisible(!running);
-        gameElements.radioContainer.setVisible(!running);
+        if (end){
+            gameElements.startButton.setText("Re-START");
+            //elementsVisibility(!running);
+            gameElements.startContainer.setVisible(!running);
+            //gameElements.difficultyPanel.setVisible(!running);
+            gameElements.viewDifficultyPanel.setVisible(!running);
+            snakeColors.viewColorPanel.setVisible(!running);
+
+            end = false;
+        }
     }  
 
     @Override
