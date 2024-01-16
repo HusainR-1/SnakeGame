@@ -26,7 +26,7 @@ public class GameElements implements ActionListener{
     JButton showDifficultyButton;
     JPanel viewDifficultyPanel;
 
-    public JPanel difficultyMode() {
+    public void difficultyMode() {
 
         easyButton = new JRadioButton("Easy");
         mediumButton = new JRadioButton("Medium");
@@ -60,7 +60,8 @@ public class GameElements implements ActionListener{
 
         difficultyPanel.setVisible(false);
 
-        return difficultyPanel;
+        GameDesign.standardType(difficultyPanel);
+
     }
 
     public JPanel createNamePanel(){
@@ -88,7 +89,7 @@ public class GameElements implements ActionListener{
         startButton = new JButton("START GAME");
         startButton.setBorderPainted(false);
 
-        GameDesign.standardType(startButton,25);   
+        GameDesign.standardType(startButton,30);   
     }
 
     public JPanel createAssistiveMode(){
@@ -96,9 +97,11 @@ public class GameElements implements ActionListener{
         assistCheckBox = new JCheckBox("Assistive Mode");
         assistCheckBox.setFocusable(false);
 
-        GameDesign.standardType(assistCheckBox);
+        GameDesign.standardType(assistCheckBox,15);
+
+        createStartButton();
         
-        startContainer = new JPanel(new GridLayout(2,1));
+        startContainer = new JPanel(new GridLayout(1,2));
         startContainer.add(startButton);
         startContainer.add(assistCheckBox);
 
@@ -108,11 +111,17 @@ public class GameElements implements ActionListener{
     public JPanel makeDifficultyPanel(){
         showDifficultyButton = new JButton("Difficulty Level");
         showDifficultyButton.setBorderPainted(false);
+        showDifficultyButton.setFocusable(false);
 
         GameDesign.standardType(showDifficultyButton);
 
-        viewDifficultyPanel = new JPanel(new GridLayout(1,1));
+        difficultyMode();
+
+        viewDifficultyPanel = new JPanel(new GridLayout(2,1));
         viewDifficultyPanel.add(showDifficultyButton);
+        viewDifficultyPanel.add(difficultyPanel);
+
+        GameDesign.standardType(viewDifficultyPanel);
 
         return viewDifficultyPanel;
     }   

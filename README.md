@@ -11,3 +11,9 @@ avoiding repeated coding and having neat code.
 
 Made different files and tried to make my code human readable
 also made more generalized methods and classes.
+
+Again Worked on it by making clickable buttons to show the color options
+and the difficulty options.
+
+Tried to make seperate working panels for each elements and then made
+a sub panel to add all with a desired layout.

@@ -33,7 +33,8 @@ public class GameDesign {
     }
 
     public static void standardType(Graphics g){
-        g.setColor(Color.red);
+        if(!GamePanel.end){g.setColor(Color.green);}
+        else{g.setColor(Color.red);}
         g.setFont(new Font("Consolas",Font.BOLD,20)); 
     }
 

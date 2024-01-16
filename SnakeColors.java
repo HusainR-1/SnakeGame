@@ -41,7 +41,7 @@ public class SnakeColors implements ActionListener {
     }
 
     //Making a Color Container
-    public JPanel colorContainer(){
+    public void colorContainer(){
         rainbowButton = new JRadioButton("Rainbow");
         standardButton = new JRadioButton("Green");
         standardButton.setSelected(true);
@@ -77,7 +77,6 @@ public class SnakeColors implements ActionListener {
 
         colorPanel.setVisible(false);
 
-        return colorPanel;
     }
 
     //Checks Color Method
@@ -97,11 +96,17 @@ public class SnakeColors implements ActionListener {
     public JPanel makeColorPanel(){
         showColorButton = new JButton("COLORS");
         showColorButton.setBorderPainted(false);
+        
 
         GameDesign.standardType(showColorButton);
 
-        viewColorPanel = new JPanel(new GridLayout(1,1));
+        colorContainer();
+
+        viewColorPanel = new JPanel(new GridLayout(2,1));
         viewColorPanel.add(showColorButton);
+        viewColorPanel.add(colorPanel);
+
+        GameDesign.standardType(viewColorPanel);
 
         return viewColorPanel;
     }
