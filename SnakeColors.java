@@ -13,7 +13,7 @@ public class SnakeColors implements ActionListener {
     private static Random random = new Random();
     JButton showColorButton;
     JRadioButton rainbowButton;
-    JRadioButton standardButton;
+    JRadioButton greenButton;
     JRadioButton blackwhiteButton;
     JRadioButton blueButton;
     JPanel colorPanel;
@@ -42,15 +42,22 @@ public class SnakeColors implements ActionListener {
 
     //Making a Color Container
     public void colorContainer(){
+
         rainbowButton = new JRadioButton("Rainbow");
-        standardButton = new JRadioButton("Green");
-        standardButton.setSelected(true);
+        greenButton = new JRadioButton("Green");
         blackwhiteButton = new JRadioButton("Black & White");
         blueButton = new JRadioButton("Blue");
+
+        rainbowButton.setFocusable(false);
+        greenButton.setFocusable(false);
+        blackwhiteButton.setFocusable(false);
+        blueButton.setFocusable(false);
+
+        greenButton.setSelected(true);
         
         ButtonGroup group = new ButtonGroup();
         group.add(rainbowButton);
-        group.add(standardButton);
+        group.add(greenButton);
         group.add(blackwhiteButton);
         group.add(blueButton);
 
@@ -59,7 +66,7 @@ public class SnakeColors implements ActionListener {
         rainbowButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {snakeColor = "rainbow";}});
-        standardButton.addActionListener(new ActionListener() {
+        greenButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {snakeColor = "green";}});
         blackwhiteButton.addActionListener(new ActionListener() {
@@ -71,7 +78,7 @@ public class SnakeColors implements ActionListener {
         
         colorPanel = new JPanel(new GridLayout(2,2));
         colorPanel.add(rainbowButton);
-        colorPanel.add(standardButton);
+        colorPanel.add(greenButton);
         colorPanel.add(blueButton);
         colorPanel.add(blackwhiteButton);
 
@@ -96,6 +103,7 @@ public class SnakeColors implements ActionListener {
     public JPanel makeColorPanel(){
         showColorButton = new JButton("COLORS");
         showColorButton.setBorderPainted(false);
+        showColorButton.setFocusable(false);
         
 
         GameDesign.standardType(showColorButton);

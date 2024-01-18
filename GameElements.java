@@ -32,6 +32,10 @@ public class GameElements implements ActionListener{
         mediumButton = new JRadioButton("Medium");
         hardButton = new JRadioButton("Hard");
 
+        easyButton.setFocusable(false);
+        mediumButton.setFocusable(false);
+        hardButton.setFocusable(false);
+
         mediumButton.setSelected(true);
 
         ButtonGroup group = new ButtonGroup();
